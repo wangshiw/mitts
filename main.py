@@ -61,6 +61,15 @@ async def index_page(request: Request):
             .modal.show {{ display: flex; }}
             .modal-content {{ background: #fff; padding: 20px; border-radius: 8px; width: 350px; text-align: center; }}
             .modal-content h3 {{ margin-bottom: 15px; }}
+            @media (max-width: 768px) {{
+                .header {{ flex-direction: column; gap: 10px; align-items: stretch; }}
+                .header input {{ width: 100%; }}
+                .main {{ flex-direction: column; height: auto; min-height: calc(100vh - 100px); }}
+                .left, .center, .right {{ width: 100%; }}
+                .center {{ min-height: 200px; }}
+                .right {{ max-height: 300px; }}
+                .modal-content {{ width: 90%; margin: 0 15px; }}
+            }}
         </style>
         <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     </head>
