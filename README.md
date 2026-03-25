@@ -7,14 +7,13 @@
 - 多种音色选择（默认、中文女声、英文女声等）
 - 在线试听
 - 阅读 App 一键导入
-- Token 防盗刷
 
 ## 快速开始
 
 ### 1. 克隆项目
 
 ```bash
-git clone https://github.com/你的用户名/xiaomitts.git
+git clone https://github.com/ISuuuu/mitts.git
 cd xiaomitts
 ```
 
@@ -41,25 +40,22 @@ source py310/bin/activate
 ### 4. 安装依赖
 
 ```bash
-pip install -r requirements.txt
+uv pip install -r requirements.txt
 ```
 
-### 5. 配置
-
-```bash
-# 复制配置模板
-cp config.example.json config.json
-
-# 编辑 config.json，填入你的 API Key
-```
-
-### 6. 启动服务
+### 5. 启动服务
 
 ```bash
 python main.py
 ```
 
 服务默认运行在 `http://localhost:8099`
+
+目前借助pm2 保持后台：
+
+```bash
+pm2 start python --name "mitts" -- main.py
+```
 
 ## API 接口
 
@@ -73,6 +69,7 @@ python main.py
 
 | 参数 | 必填 | 说明 |
 |------|------|------|
+| `api_key` | 是 | 小米api key |
 | `token` | 是 | 访问凭证 |
 | `text` | 是 | 要合成的文本 |
 | `voice` | 否 | 音色，默认 `mimo_default` |

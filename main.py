@@ -35,8 +35,9 @@ async def index_page(request: Request):
             body {{ font-family: -apple-system, sans-serif; background: #f5f5f5; min-height: 100vh; }}
             .header {{ background: #fff; padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }}
             .header h1 {{ font-size: 18px; color: #333; }}
-            .header .settings {{ display: flex; gap: 10px; align-items: center; }}
-            .header input {{ padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; width: 200px; }}
+            .header input {{ padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; width: 280px; }}
+            .header .api-group {{ display: flex; align-items: center; gap: 8px; }}
+            .header .api-label {{ font-size: 13px; color: #666; white-space: nowrap; }}
             .main {{ display: flex; gap: 15px; padding: 15px; height: calc(100vh - 60px); }}
             .panel {{ background: #fff; border-radius: 8px; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }}
             .left {{ width: 250px; display: flex; flex-direction: column; gap: 15px; }}
@@ -66,11 +67,9 @@ async def index_page(request: Request):
     <body>
         <div class="header">
             <h1>🔊 小米 TTS</h1>
-            <div class="settings">
-                <span style="font-size:13px; color:#666;">API Key</span>
+            <div class="api-group">
+                <span class="api-label">API Key</span>
                 <input type="password" id="api_key" placeholder="sk-...">
-                <span style="font-size:13px; color:#666;">Token</span>
-                <input type="text" id="token" placeholder="自定义密码">
             </div>
         </div>
         <div class="main">
@@ -135,16 +134,12 @@ async def index_page(request: Request):
 
             window.onload = function() {{
                 document.getElementById('api_key').value = localStorage.getItem('api_key') || '';
-                document.getElementById('token').value = localStorage.getItem('token') || '';
                 const savedHistory = localStorage.getItem('tts_history');
                 if (savedHistory) historyList = JSON.parse(savedHistory);
                 renderHistory();
                 
                 document.getElementById('api_key').addEventListener('change', function() {{
                     localStorage.setItem('api_key', this.value);
-                }});
-                document.getElementById('token').addEventListener('change', function() {{
-                    localStorage.setItem('token', this.value);
                 }});
             }};
 
@@ -156,7 +151,6 @@ async def index_page(request: Request):
 
             function generate() {{
                 const apiKey = document.getElementById('api_key').value;
-                const token = document.getElementById('token').value;
                 const text = document.getElementById('text_input').value.trim();
                 const voice = document.getElementById('voice_select').value;
                 const btn = document.getElementById('gen_btn');
@@ -167,13 +161,12 @@ async def index_page(request: Request):
                 const finalText = style ? `<style>${{style}}</style>${{text}}` : text;
                 
                 if (!apiKey) return alert('请先填写 API Key');
-                if (!token) return alert('请先填写 Token');
                 if (!text) return alert('请输入文本');
                 
                 btn.innerHTML = '⏳ 生成中...';
                 btn.disabled = true;
                 
-                const url = `/tts?api_key=${{encodeURIComponent(apiKey)}}&token=${{encodeURIComponent(token)}}&voice=${{encodeURIComponent(voice)}}&text=${{encodeURIComponent(finalText)}}`;
+                const url = `/tts?api_key=${{encodeURIComponent(apiKey)}}&voice=${{encodeURIComponent(voice)}}&text=${{encodeURIComponent(finalText)}}`;
                 
                 const item = {{ text: style ? `[${{style}}] ${{text}}` : text, voice: voice, url: url }};
                 historyList.unshift(item);
@@ -198,9 +191,8 @@ async def index_page(request: Request):
 
             function getImportUrl() {{
                 const apiKey = document.getElementById('api_key').value;
-                const token = document.getElementById('token').value;
                 const voice = document.getElementById('voice_select').value;
-                return `${{baseUrl}}/api/legado-import?api_key=${{encodeURIComponent(apiKey)}}&token=${{encodeURIComponent(token)}}&voice=${{voice}}`;
+                return `${{baseUrl}}/api/legado-import?api_key=${{encodeURIComponent(apiKey)}}&voice=${{voice}}`;
             }}
 
             function directImport() {{
@@ -231,12 +223,11 @@ async def index_page(request: Request):
 @app.get("/tts")
 def tts_forwarder(request: Request):
     api_key = request.query_params.get("api_key", "")
-    token = request.query_params.get("token", "")
     text = request.query_params.get("text", "")
     voice = request.query_params.get("voice", "mimo_default")
 
-    if not api_key or not token:
-        return Response(status_code=403, content="Missing api_key or token")
+    if not api_key:
+        return Response(status_code=403, content="Missing api_key")
     if not text:
         return Response(status_code=400, content="Empty text")
 
@@ -280,28 +271,27 @@ def tts_forwarder(request: Request):
 @app.get("/api/legado-import")
 async def legado_import(request: Request, voice: str = "mimo_default"):
     api_key = request.query_params.get("api_key", "")
-    token = request.query_params.get("token", "")
-
     base_url = str(request.base_url).replace("http://", "https://").rstrip("/")
     v_name = VOICES.get(voice, f"音色({voice})")
-    safe_token = urllib.parse.quote(token)
     safe_api_key = urllib.parse.quote(api_key)
 
-    tts_url = f"{base_url}/tts?api_key={safe_api_key}&voice={voice}&volume=100&pitch=0&personality=undefined&rate={{{{(speakSpeed - 10) * 2}}}}&token={safe_token}&text={{{{java.encodeURI(speakText)}}}}"
+    tts_url = f"{base_url}/tts?api_key={safe_api_key}&voice={voice}&volume=100&pitch=0&personality=undefined&rate={{{{(speakSpeed - 10) * 2}}}}&text={{{{java.encodeURI(speakText)}}}}"
 
-    config_data = {
-        "name": f"小米 - {v_name}",
-        "url": tts_url,
-        "contentType": "audio/mpeg",
-        "id": int(time.time() * 1000),
-        "concurrentRate": "",
-        "loginUrl": "",
-        "loginUi": "",
-        "loginCheckJs": "",
-        "header": '{"Authorization":"Bearer undefined"}',
-    }
-
-    return JSONResponse(content=[config_data])
+    return JSONResponse(
+        content=[
+            {
+                "name": f"小米 - {v_name}",
+                "url": tts_url,
+                "contentType": "audio/mpeg",
+                "id": int(time.time() * 1000),
+                "concurrentRate": "",
+                "loginUrl": "",
+                "loginUi": "",
+                "loginCheckJs": "",
+                "header": '{"Authorization":"Bearer undefined"}',
+            }
+        ]
+    )
 
 
 if __name__ == "__main__":
