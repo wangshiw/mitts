@@ -1,9 +1,10 @@
-# 小米 TTS for 阅读
+# 小米 TTS for 阅读 
 
 为 [legado](https://github.com/gedoor/legado) 阅读 App 提供小米 MiMo TTS 语音合成服务。
 
 ## 功能特性
 
+- 使用小米 mimo-v2-tts 模型
 - 支持 legado 阅读 App 一键导入
 - 多种音色（默认、中文女声、英文女声）
 - 语音风格控制（开心、悲伤、东北话、粤语、唱歌等）

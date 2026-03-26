@@ -1,11 +1,15 @@
 import base64
 import time
 import urllib.parse
+import logging
 from fastapi import FastAPI, Response, Request
 from fastapi.responses import JSONResponse, HTMLResponse
 from openai import OpenAI
 import uvicorn
 from jinja2 import Environment, FileSystemLoader
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 env = Environment(loader=FileSystemLoader("templates"))
@@ -81,7 +85,8 @@ def tts_forwarder(request: Request):
             },
         )
     except Exception as e:
-        return Response(status_code=500, content=str(e))
+        logger.error(f"TTS Error: {type(e).__name__}: {e}")
+        return Response(status_code=502, content=f"上游API错误: {type(e).__name__}")
 
 
 @app.get("/api/legado-import")
