@@ -29,14 +29,22 @@
 
 ## 快速部署
 
-### 1. 克隆项目
+### Vercel 部署（推荐）
+
+[![Deploy to Vercel](https://vercel.com/button)](https://vercel.com/new)
+
+fork 本项目后，点击上方按钮进入 Vercel，选择并导入您的仓库即可一键部署。部署完成后在页面手动输入 API Key 即可使用。
+
+### 本地部署
+
+#### 1. 克隆项目
 
 ```bash
 git clone https://github.com/ISuuuu/xiaomitts.git
 cd xiaomitts
 ```
 
-### 2. 安装依赖
+#### 2. 安装依赖
 
 ```bash
 # 创建虚拟环境
@@ -52,7 +60,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 3. 启动服务
+#### 3. 启动服务
 
 ```bash
 python main.py
@@ -60,7 +68,7 @@ python main.py
 
 服务默认运行在 `http://localhost:8099`
 
-### 后台运行（推荐）
+#### 后台运行（推荐）
 
 ```bash
 pm2 start python --name "mitts" -- main.py
