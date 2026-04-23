@@ -226,6 +226,23 @@
             transform: none;
         }
         .import-section { margin-top: 0; }
+        .import-notice {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 10px 12px;
+            background: #fff7ed;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            color: #92400e;
+            line-height: 1.5;
+        }
+        .notice-icon { font-size: 13px; }
+        .notice-text { color: #78350f; }
+        .notice-link { color: #ea580c; text-decoration: none; }
+        .notice-link:hover { text-decoration: underline; }
         .import-btn {
             display: flex;
             align-items: center;
@@ -416,7 +433,7 @@
         @media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}
         {% endraw %}
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
 </head>
 <body>
     <a href="https://github.com/ISuuuu/mitts" target="_blank" class="github-corner" aria-label="View source on GitHub"><svg width="48" height="48" viewBox="0 0 250 250" style="fill:#FD6C6C; color:#fff; position: absolute; top: 0; border: 0; left: 0; transform: scale(-1, 1); z-index: 999;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
@@ -504,10 +521,11 @@
             </div>
             <div class="panel import-section">
                 <div class="section-title">导入阅读 App</div>
-                <div style="font-size:12px; color:#6b7280; margin-bottom:12px; line-height:1.6;">
-                    ⚠️ 使用前请先在顶部填写 <b>小米 API Key</b><br>
-                    申请地址：<a href="https://platform.xiaomimimo.com/" target="_blank" style="color:#ff6b35;">https://platform.xiaomimimo.com/</a><br>
-                    之后即可使用本软件全部功能
+                <div class="import-notice">
+                    <span class="notice-icon">⚠️</span>
+                    <span class="notice-text">使用前请先在顶部填写 <b>小米 API Key</b></span>
+                    <a href="https://platform.xiaomimimo.com/" target="_blank" class="notice-link">申请地址</a>
+                    <span class="notice-text">，输入后可使用本软件全部功能</span>
                 </div>
                 <div class="import-btn" onclick="directImport()">📱 直接导入</div>
                 <div class="import-btn" onclick="showQRModal()">📷 扫码导入</div>
@@ -533,7 +551,7 @@
     <div class="modal" id="qr_modal">
         <div class="modal-content">
             <h3>扫码导入</h3>
-            <p>用阅读 App 扫描下方二维码</p>
+            <p>用浏览器扫描下方二维码</p>
             <div id="qr_code" style="display:flex; justify-content:center; padding:15px; background:#fff; border-radius:12px; margin-bottom:15px;"></div>
             <button class="btn btn-primary" onclick="closeQRModal()">关闭</button>
         </div>
@@ -571,6 +589,11 @@
             el.classList.add('active');
             
             currentModel = el.dataset.model;
+            
+            // 切换模型时重置风格选择
+            document.getElementById('style_preset').value = '';
+            document.getElementById('style_custom').value = '';
+            document.getElementById('style_custom').style.display = 'none';
             
             // 显示/隐藏对应区域
             const voiceSection = document.getElementById('voice_section');
@@ -793,13 +816,12 @@
         function showQRModal() {
             const qrContainer = document.getElementById('qr_code');
             qrContainer.innerHTML = '';
-            new QRCode(qrContainer, {
-                text: getImportUrl(),
-                width: 180,
-                height: 180,
-                colorDark: '#000000',
-                colorLight: '#ffffff',
-            });
+            var typeNumber = 0;
+            var errorCorrectionLevel = 'L';
+            var qr = qrcode(typeNumber, errorCorrectionLevel);
+            qr.addData(getImportUrl());
+            qr.make();
+            qrContainer.innerHTML = qr.createImgTag(4, 8);
             document.getElementById('qr_modal').classList.add('show');
         }
         function closeQRModal() {

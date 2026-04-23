@@ -4,15 +4,11 @@
 
 ## 功能特性
 
-- 使用小米 **MiMo V2.5** 语音合成模型（默认）
-- 支持三种 V2.5 模式：**内置音色**、**VoiceDesign**、**VoiceClone**
-- 支持 MiMo V2 模型（兼容）
+- 支持模型: 🎤 mimo-v2.5-tts · 🎨 mimo-v2.5-tts-voicedesign · 🔊 mimo-v2.5-tts-voiceclone · 📦 mimo-v2-tts
 - 支持 legado 阅读 App 一键导入
-- **8种 v2.5 内置音色** + 2种 v2 音色可选
 - 语音风格控制（开心、悲伤、东北话、粤语、唱歌等）
 - 情感控制、角色扮演
 - 在线试听
-- 本地部署，数据不经过第三方
 
 ## 模型版本
 
@@ -21,7 +17,7 @@
 | **V2.5 内置音色（推荐）** | `mimo-v2.5-tts` | 内置8种音色，快速上手 |
 | **V2.5 VoiceDesign** | `mimo-v2.5-tts-voicedesign` | 文本描述定制音色 |
 | **V2.5 VoiceClone** | `mimo-v2.5-tts-voiceclone` | 上传音频复刻任意音色 |
-| V2（兼容） | `mimo-v2-tts` | 旧版模型，兼容使用 |
+| V2  | `mimo-v2-tts` | 旧版模型，兼容使用 |
 
 ## V2.5 三种模式说明
 
@@ -117,7 +113,7 @@ cd xiaomitts
 
 ```bash
 # 创建虚拟环境
-python -m venv venv
+uv venv py310 --python 3.10
 
 # 激活虚拟环境
 # Windows
@@ -126,7 +122,7 @@ venv\Scripts\activate
 source venv/bin/activate
 
 # 安装依赖
-pip install -r requirements.txt
+uv pip install -r requirements.txt
 ```
 
 #### 3. 启动服务
