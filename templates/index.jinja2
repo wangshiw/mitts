@@ -91,17 +91,13 @@
             border: 1px solid var(--border);
             transition: all 0.3s ease;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
         }
         .panel:hover {
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
         }
         .left { width: 320px; display: flex; flex-direction: column; gap: 20px; }
         .center { flex: 1; display: flex; flex-direction: column; }
-        .right { width: 320px; display: flex; flex-direction: column; overflow: hidden; }
+        .right { width: 320px; }
         .section-title {
             font-size: 15px;
             font-weight: 600;
@@ -322,7 +318,7 @@
             border-radius: 8px;
         }
         #history_list {
-            flex: 1;
+            max-height: calc(100vh - 280px);
             overflow-y: auto;
             padding-right: 4px;
         }
