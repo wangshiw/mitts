@@ -803,23 +803,42 @@
 
         function getImportUrl() {
             const apiKey = document.getElementById('api_key').value;
-            // 导入只支持 v2.5 内置音色模式
-            const voice = document.getElementById('voice_select').value;
-            return baseUrl + '/api/legado-import?api_key=' + encodeURIComponent(apiKey) + '&voice=' + voice + '&model=v2.5';
+            let importModel = 'v2.5';
+            let voice = document.getElementById('voice_select').value;
+
+            if (currentModel === 'v2') {
+                importModel = 'v2';
+            } else if (currentModel === 'v2.5_clone') {
+                alert('V2.5 VoiceClone 暂不支持直接导入和扫码导入');
+                return '';
+            } else if (currentModel === 'v2.5_design') {
+                importModel = 'v2.5_design';
+                voice = document.getElementById('voice_desc').value.trim();
+                if (!voice) {
+                    alert('请先输入音色描述');
+                    return '';
+                }
+            }
+
+            return baseUrl + '/api/legado-import?api_key=' + encodeURIComponent(apiKey) + '&voice=' + encodeURIComponent(voice) + '&model=' + encodeURIComponent(importModel);
         }
 
         function directImport() {
-            const importUrl = 'legado://import/httpTTS?src=' + encodeURIComponent(getImportUrl());
+            const sourceUrl = getImportUrl();
+            if (!sourceUrl) return;
+            const importUrl = 'legado://import/httpTTS?src=' + encodeURIComponent(sourceUrl);
             window.location.href = importUrl;
         }
 
         function showQRModal() {
+            const sourceUrl = getImportUrl();
+            if (!sourceUrl) return;
             const qrContainer = document.getElementById('qr_code');
             qrContainer.innerHTML = '';
             var typeNumber = 0;
             var errorCorrectionLevel = 'L';
             var qr = qrcode(typeNumber, errorCorrectionLevel);
-            qr.addData(getImportUrl());
+            qr.addData(sourceUrl);
             qr.make();
             qrContainer.innerHTML = qr.createImgTag(4, 8);
             document.getElementById('qr_modal').classList.add('show');
