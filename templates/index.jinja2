@@ -91,13 +91,17 @@
             border: 1px solid var(--border);
             transition: all 0.3s ease;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
         .panel:hover {
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
         }
         .left { width: 320px; display: flex; flex-direction: column; gap: 20px; }
         .center { flex: 1; display: flex; flex-direction: column; }
-        .right { width: 320px; overflow-y: auto; }
+        .right { width: 320px; display: flex; flex-direction: column; overflow: hidden; }
         .section-title {
             font-size: 15px;
             font-weight: 600;
@@ -316,6 +320,18 @@
             width: 100%;
             height: 36px;
             border-radius: 8px;
+        }
+        #history_list {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        #history_list::-webkit-scrollbar {
+            width: 4px;
+        }
+        #history_list::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
         }
         .modal {
             display: none;
@@ -538,7 +554,7 @@
             </div>
         </div>
         <div class="right">
-            <div class="panel" style="height:100%;">
+            <div class="panel">
                 <div class="section-title">
                     试听记录
                     <span class="clear-btn" onclick="clearHistory()" id="clear_history_btn" style="display:none;">🗑️ 清空</span>
