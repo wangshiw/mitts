@@ -2,6 +2,8 @@
 
 为 [legado](https://github.com/gedoor/legado) 阅读 App 提供小米 MiMo TTS 语音合成服务。
 
+![Web 界面](./screenshot.png)
+
 ## 功能特性
 
 - 支持模型: 🎤 mimo-v2.5-tts · 🎨 mimo-v2.5-tts-voicedesign · 🔊 mimo-v2.5-tts-voiceclone · 📦 mimo-v2-tts
@@ -17,7 +19,7 @@
 | **V2.5 内置音色（推荐）** | `mimo-v2.5-tts` | 内置8种音色，快速上手 |
 | **V2.5 VoiceDesign** | `mimo-v2.5-tts-voicedesign` | 文本描述定制音色 |
 | **V2.5 VoiceClone** | `mimo-v2.5-tts-voiceclone` | 上传音频复刻任意音色 |
-| V2  | `mimo-v2-tts` | 旧版模型，兼容使用 |
+| **V2**  | `mimo-v2-tts` | 旧版模型，兼容使用 |
 
 ## V2.5 三种模式说明
 
@@ -63,7 +65,7 @@
 
 ## 风格示例
 
-### 基础风格（V2.5 & V2）
+### 基础风格 
 
 ```
 <style>开心</style>明天就是周五了，真开心！
@@ -74,17 +76,9 @@
 <style>唱歌</style>原谅我这一生不羁放纵爱自由
 <style>悄悄话</style>我跟你说个秘密...
 ```
+ 
 
-### V2.5 新增情感控制
-
-```
-<style>happy</style>The weather is wonderful today!
-<style>sad</style>Everything feels so gray today.
-<style>gentle</style>Take your time, no rush.
-<style>excited</style>This is amazing news!
-```
-
-### V2.5 角色扮演
+###  角色扮演
 
 ```
 <style>孙悟空</style>俺老孙来也！
@@ -99,6 +93,8 @@
 [![Deploy to Vercel](https://vercel.com/button)](https://vercel.com/new)
 
 fork 本项目后，点击上方按钮进入 Vercel，选择并导入您的仓库即可一键部署。部署完成后在页面手动输入 API Key 即可使用。
+
+
 
 ### 本地部署
 
@@ -117,9 +113,9 @@ uv venv py310 --python 3.10
 
 # 激活虚拟环境
 # Windows
-venv\Scripts\activate
+py310\Scripts\activate
 # Linux/macOS
-source venv/bin/activate
+source py310/bin/activate
 
 # 安装依赖
 uv pip install -r requirements.txt
@@ -141,11 +137,12 @@ pm2 start python --name "mitts" -- main.py
 
 ## 导入到阅读 App
 
-1. 打开阅读 App
-2. 进入 **我的** → **朗读引擎**
-3. 点击右上角 **+**
+1. 在本项目页面输入 API Key，点击 **直接导入** 
+ **或者**
+1. **扫码导入**  浏览器中获取链接
+2. 打开阅读 App
+3. 点击屏幕中心 弹出菜单 长按**朗读** → **朗读引擎**
 4. 选择 **网络导入**
-5. 在本项目页面输入 API Key，点击 **直接导入** 或 **扫码导入**
 
 ## API 接口
 
